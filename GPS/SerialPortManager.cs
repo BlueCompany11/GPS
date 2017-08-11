@@ -15,7 +15,7 @@ namespace GPS
         private SerialSettings _currentSerialSettings = new SerialSettings();
         private string _latestRecieved = String.Empty;
         public event EventHandler<SerialDataEventArgs> NewSerialDataRecieved;
-        SerialPortManager _spManager;
+        int w { get; set; }
         /// <summary>
         /// Returns 1 if it is opened 
         /// </summary>
@@ -24,16 +24,6 @@ namespace GPS
         {
             return _serialPort.IsOpen;
         }
-
-        //public void UserInitialization()
-        //{
-        //    _spManager = new SerialPortManager();
-        //    SerialSettings mySerialSettings = _spManager.CurrentSerialSettings;
-
-        //    _spManager.NewSerialDataRecieved += new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved);
-        //}
-
-
 
         /// <summary>
         /// Gets or sets the current serial port settings
@@ -92,6 +82,7 @@ namespace GPS
         public void StopListening()
         {
             ForButtonColors.status = 3;
+            
             _serialPort.Close();
         }
 

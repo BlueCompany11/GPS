@@ -17,7 +17,20 @@ namespace GPS
         SerialPortManager _spManager;
         string toLink = "";
         string str = "";
+        //ForButtonColors x=ForButtonColors.GetColorClass;
+        //static public void ChangeColor(int w)
+        //{
+        //    if (x.status != w)
+        //    {
+        //        x.status = w;
+        //        Button z = new Button();
 
+        //    }
+        //}
+        //public Button ButtonColor
+        //{
+        //    get { return btnColors; }
+        //}
         public Form1()
         {
             InitializeComponent();
@@ -33,14 +46,14 @@ namespace GPS
 
         void _spManager_NewSerialDataRecieved(object sender, SerialDataEventArgs e)
         {
-            
+
             if (this.InvokeRequired)
             {
                 // Using this.Invoke causes deadlock when closing serial port, and BeginInvoke is good practice anyway.
                 this.BeginInvoke(new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved), new object[] { sender, e });
                 return;
             }
-
+            btnColors.PerformClick();
             //int maxTextLength = 1000; // maximum text length in text box
             //if (tbData.TextLength > maxTextLength)
             //    tbData.Text = tbData.Text.Remove(0, tbData.TextLength - maxTextLength);
@@ -57,7 +70,7 @@ namespace GPS
                 String[] substrings = str.Split('$');
                 foreach (var item in substrings)
                 {
-                    if (item.Length >= 32 && item.Contains("GLL"))  
+                    if (item.Length >= 32 && item.Contains("GLL"))
                     {
                         toLink = item;
                         //,,,,,
@@ -70,9 +83,10 @@ namespace GPS
                     {
                         ForButtonColors.status = 1;
                     }
+                    btnColors.PerformClick();
                 }
             }
-            if (toLink.Length>1&&toLink[0] == 'G' && toLink[1] == 'P')
+            if (toLink.Length > 1 && toLink[0] == 'G' && toLink[1] == 'P')
             {
                 toLink = toLink.Remove(0, 2);
             }
@@ -123,7 +137,7 @@ namespace GPS
                     }
                 }
                 string Lati = "";
-                string Latifirsttwonumbers = x[17].ToString() + x[18].ToString()+x[19].ToString();
+                string Latifirsttwonumbers = x[17].ToString() + x[18].ToString() + x[19].ToString();
                 for (int i = 20; i < 27; ++i)
                 {
                     if (i != 22)
@@ -142,39 +156,39 @@ namespace GPS
             public string MakeURL()
             {
                 string x;
-                x = "https://www.google.com/maps/place/"+this.Longitiude + "," + this.Latitiude;
+                x = "https://www.google.com/maps/place/" + this.Longitiude + "," + this.Latitiude;
                 return x;
             }
         }
 
-        public void ChangeColour(int x)
-        {
-            if (x != ForButtonColors.status)
-            {
-                ForButtonColors.status = x;
-                btnColors.PerformClick();
-            }
+        //public void ChangeColour(int x)
+        //{
+        //    if (x != ForButtonColors.status)
+        //    {
+        //        ForButtonColors.status = x;
+        //        btnColors.PerformClick();
+        //    }
 
-        }
+        //}
         public void btnColors_Click(object sender, EventArgs e)
         {
             int caseSwitch = ForButtonColors.status;
-                switch (caseSwitch)
-                {
-                    case 0:
+            switch (caseSwitch)
+            {
+                case 0:
                     btnColors.BackColor = System.Drawing.Color.Red; //Color.Red;
-                        break;
-                    case 1:
-                        btnColors.BackColor = System.Drawing.Color.Orange;
-                        break;
-                    case 2:
-                        btnColors.BackColor = System.Drawing.Color.Green;
-                        break;
-                    case 3:
-                        btnColors.BackColor = System.Drawing.Color.Gray;
-                        break;
+                    break;
+                case 1:
+                    btnColors.BackColor = System.Drawing.Color.Orange;
+                    break;
+                case 2:
+                    btnColors.BackColor = System.Drawing.Color.Green;
+                    break;
+                case 3:
+                    btnColors.BackColor = System.Drawing.Color.Gray;
+                    break;
 
-                }
+            }
         }
     }
 }

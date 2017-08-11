@@ -10,7 +10,8 @@ namespace GPS
     {
         private static ForButtonColors instance = null;
         private int counter = 0;
-        static public int status { get; set; } 
+
+        public static int status { get; set; }
 
         public static ForButtonColors GetColorClass
         {
@@ -19,6 +20,7 @@ namespace GPS
                 if (instance == null)
                 {
                     instance = new ForButtonColors();
+                    
                 }
                 return instance;
             }
