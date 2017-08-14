@@ -103,4 +103,43 @@ namespace GPS
         public byte[] Data;
 
     }
+    public struct Gelocation
+    {
+        string Latitiude;
+        string Longitiude;
+        public Gelocation(string x)
+        {
+            string Longi = "";
+            string Longifirsttwonumbers = x[4].ToString() + x[5].ToString();
+            for (int i = 6; i < 13; ++i)
+            {
+                if (i != 8)
+                {
+                    Longi += x[i];
+                }
+            }
+            string Lati = "";
+            string Latifirsttwonumbers = x[17].ToString() + x[18].ToString() + x[19].ToString();
+            for (int i = 20; i < 27; ++i)
+            {
+                if (i != 22)
+                {
+                    Lati += x[i];
+                }
+            }
+            int a, b;
+            Int32.TryParse(Lati, out a);
+            Int32.TryParse(Longi, out b);
+            a /= 60;
+            b /= 60;
+            Latitiude = Latifirsttwonumbers + "." + a.ToString() + "°";
+            Longitiude = Longifirsttwonumbers + "." + b.ToString() + "°";
+        }
+        public string MakeURL()
+        {
+            string x;
+            x = "https://www.google.com/maps/place/" + this.Longitiude + "," + this.Latitiude;
+            return x;
+        }
+    }
 }
