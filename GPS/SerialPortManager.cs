@@ -56,7 +56,7 @@ namespace GPS
             // Closing serial port if it is open
             if (_serialPort != null && _serialPort.IsOpen)
                 _serialPort.Close();
-
+            
             // Setting serial port settings
             _serialPort = new SerialPort("COM4");
 

@@ -14,23 +14,11 @@ namespace GPS
 {
     public partial class Form1 : Form
     {
+        static System.Windows.Forms.Timer myTimer = new System.Windows.Forms.Timer();
         SerialPortManager _spManager;
         string toLink = "";
         string str = "";
-        //ForButtonColors x=ForButtonColors.GetColorClass;
-        //static public void ChangeColor(int w)
-        //{
-        //    if (x.status != w)
-        //    {
-        //        x.status = w;
-        //        Button z = new Button();
 
-        //    }
-        //}
-        //public Button ButtonColor
-        //{
-        //    get { return btnColors; }
-        //}
         public Form1()
         {
             InitializeComponent();
@@ -46,17 +34,16 @@ namespace GPS
 
         void _spManager_NewSerialDataRecieved(object sender, SerialDataEventArgs e)
         {
-
+            if (!_spManager.IsSerialPortOpened())
+            {
+                ForButtonColors.status = 0;
+            }
             if (this.InvokeRequired)
             {
                 // Using this.Invoke causes deadlock when closing serial port, and BeginInvoke is good practice anyway.
                 this.BeginInvoke(new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved), new object[] { sender, e });
                 return;
             }
-            btnColors.PerformClick();
-            //int maxTextLength = 1000; // maximum text length in text box
-            //if (tbData.TextLength > maxTextLength)
-            //    tbData.Text = tbData.Text.Remove(0, tbData.TextLength - maxTextLength);
 
             // This application is connected to a GPS sending ASCCI characters, so data is converted to text
             str += Encoding.ASCII.GetString(e.Data);
@@ -64,6 +51,7 @@ namespace GPS
             {
                 str = "";
             }
+
             tbData.AppendText(str);
             if (str.Contains("GLL"))
             {
@@ -73,17 +61,14 @@ namespace GPS
                     if (item.Length >= 32 && item.Contains("GLL"))
                     {
                         toLink = item;
-                        //,,,,,
                         GoogleMapstxt.Text = toLink;
-                        //jesli dobre info stale pobiera
+                        //jesli stale pobiera dobre info 
                         ForButtonColors.status = 2;
-                        //btnColors.BackColor = Color.Green;
                     }
                     if (item.Contains(",,,,,") && item.Contains("GLL"))
                     {
                         ForButtonColors.status = 1;
                     }
-                    btnColors.PerformClick();
                 }
             }
             if (toLink.Length > 1 && toLink[0] == 'G' && toLink[1] == 'P')
@@ -96,6 +81,7 @@ namespace GPS
         private void btnStart_Click(object sender, EventArgs e)
         {
             _spManager.StartListening();
+            myTimer.Start();
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -103,19 +89,24 @@ namespace GPS
             _spManager.StopListening();
         }
 
+        private string UnUsedMethodToGenerateURL()
+        {
+            //https://www.google.com/maps/place/24°11'51.4"N+120°46'49.8"E
+            //012 45678901234567890
+            //GLL,5214.56938,N,02052.34845,E,1
+            string url = ""; // "https://www.google.com/maps/place/";
+            url = "https://www.google.com/maps/place/" + toLink[4].ToString() + toLink[5].ToString() + '°' + toLink[6].ToString() + toLink[7].ToString() +
+                '\'' + toLink[9].ToString() + toLink[10].ToString() + '.' + toLink[11].ToString() + toLink[12].ToString() +
+                toLink[13].ToString() + "\"" + toLink[15].ToString() + '+' + toLink[17].ToString() + toLink[18].ToString() +
+                toLink[19].ToString() + '°' + toLink[20].ToString() + toLink[21].ToString() + '\'' + toLink[23].ToString() +
+                toLink[24].ToString() + "." + toLink[25].ToString() + toLink[26].ToString() + toLink[27].ToString() +
+                "\"" + toLink[29].ToString();
+            return url;
+            //insert this method to button1's click as url and this will also work
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
-            ////https://www.google.com/maps/place/24°11'51.4"N+120°46'49.8"E
-            ////          012 45678901234567890
-            ////GLL,5214.56938,N,02052.34845,E,1
-            //string url = "";// "https://www.google.com/maps/place/";
-            //url = "https://www.google.com/maps/place/" + toLink[4].ToString() + toLink[5].ToString() + '°' + toLink[6].ToString() + toLink[7].ToString() +
-            //    '\'' + toLink[9].ToString() + toLink[10].ToString() + '.' + toLink[11].ToString() + toLink[12].ToString() +
-            //    toLink[13].ToString() + "\"" + toLink[15].ToString() + '+' + toLink[17].ToString() + toLink[18].ToString() +
-            //    toLink[19].ToString() + '°' + toLink[20].ToString() + toLink[21].ToString() + '\'' + toLink[23].ToString() +
-            //    toLink[24].ToString() + "." + toLink[25].ToString() + toLink[26].ToString() + toLink[27].ToString() +
-            //    "\"" + toLink[29].ToString();
-            //toLink= "GLL,5214.56938,N,02052.34845,E,1";
             Gelocation x = new Gelocation(toLink);
             string url = x.MakeURL();
             System.Diagnostics.Process.Start(url);
@@ -161,15 +152,6 @@ namespace GPS
             }
         }
 
-        //public void ChangeColour(int x)
-        //{
-        //    if (x != ForButtonColors.status)
-        //    {
-        //        ForButtonColors.status = x;
-        //        btnColors.PerformClick();
-        //    }
-
-        //}
         public void btnColors_Click(object sender, EventArgs e)
         {
             int caseSwitch = ForButtonColors.status;
@@ -187,8 +169,21 @@ namespace GPS
                 case 3:
                     btnColors.BackColor = System.Drawing.Color.Gray;
                     break;
-
             }
+            if (!_spManager.IsSerialPortOpened() && caseSwitch != 3)
+            {
+                ForButtonColors.status = 0;
+            }
+        }
+        private void MyTimer_Click(object sender, EventArgs e)
+        {
+            btnColors.PerformClick();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            myTimer.Interval = 1000;
+            myTimer.Tick += MyTimer_Click;
+            btnColors.BackColor = System.Drawing.Color.Gray;
         }
     }
 }
