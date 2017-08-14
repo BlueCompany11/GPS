@@ -103,6 +103,57 @@ namespace GPS
         public byte[] Data;
 
     }
+    //private static void DataReceivedHandler(
+    //                object sender,
+    //                SerialDataReceivedEventArgs e)
+    //{
+    //    SerialPort sp = (SerialPort)sender;
+    //    string indata = sp.ReadExisting();
+    //    Console.WriteLine("Data Received:");
+    //    Console.Write(indata);
+    //}
+    //void _spManager_NewSerialDataRecieved(object sender, SerialDataEventArgs e)
+    //{
+
+    //    if (this.InvokeRequired)
+    //    {
+    //        // Using this.Invoke causes deadlock when closing serial port, and BeginInvoke is good practice anyway.
+    //        this.BeginInvoke(new EventHandler<SerialDataEventArgs>(_spManager_NewSerialDataRecieved), new object[] { sender, e });
+    //        return;
+    //    }
+
+    //    // This application is connected to a GPS sending ASCCI characters, so data is converted to text
+    //    str += Encoding.ASCII.GetString(e.Data);
+    //    if (str.Length >= 1000)
+    //    {
+    //        str = "";
+    //    }
+
+    //    tbData.AppendText(str);
+    //    if (str.Contains("GLL"))
+    //    {
+    //        String[] substrings = str.Split('$');
+    //        foreach (var item in substrings)
+    //        {
+    //            if (item.Length >= 32 && item.Contains("GLL"))
+    //            {
+    //                toLink = item;
+    //                GoogleMapstxt.Text = toLink;
+    //                //jesli stale pobiera dobre info 
+    //                ForButtonColors.status = 2;
+    //            }
+    //            if (item.Contains(",,,,,") && item.Contains("GLL"))
+    //            {
+    //                ForButtonColors.status = 1;
+    //            }
+    //        }
+    //    }
+    //    if (toLink.Length > 1 && toLink[0] == 'G' && toLink[1] == 'P')
+    //    {
+    //        toLink = toLink.Remove(0, 2);
+    //    }
+    //    tbData.ScrollToCaret();
+    //}
     public struct Gelocation
     {
         string Latitiude;
@@ -142,4 +193,5 @@ namespace GPS
             return x;
         }
     }
+
 }

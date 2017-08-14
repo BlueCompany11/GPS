@@ -112,6 +112,29 @@ namespace GPS
 
         public void btnColors_Click(object sender, EventArgs e)
         {
+            //int caseSwitch = ForButtonColors.status;
+            //switch (caseSwitch)
+            //{
+            //    case 0:
+            //        btnColors.BackColor = System.Drawing.Color.Red; //Color.Red;
+            //        break;
+            //    case 1:
+            //        btnColors.BackColor = System.Drawing.Color.Orange;
+            //        break;
+            //    case 2:
+            //        btnColors.BackColor = System.Drawing.Color.Green;
+            //        break;
+            //    case 3:
+            //        btnColors.BackColor = System.Drawing.Color.Gray;
+            //        break;
+            //}
+            //if (!_spManager.IsSerialPortOpened() && caseSwitch != 3)
+            //{
+            //    ForButtonColors.status = 0;
+            //}
+        }
+        private void MyTimer_Click(object sender, EventArgs e)
+        {
             int caseSwitch = ForButtonColors.status;
             switch (caseSwitch)
             {
@@ -131,12 +154,10 @@ namespace GPS
             if (!_spManager.IsSerialPortOpened() && caseSwitch != 3)
             {
                 ForButtonColors.status = 0;
+                _spManager.StartListening();
             }
         }
-        private void MyTimer_Click(object sender, EventArgs e)
-        {
-            btnColors.PerformClick();
-        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             myTimer.Interval = 1000;
